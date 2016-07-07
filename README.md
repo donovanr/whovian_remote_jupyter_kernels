@@ -1,8 +1,9 @@
-# Remote Jupyter Notebook Kernels for R, Python, and Julia
+# Remote Jupyter Notebook Kernels for Python and R
 
 This works on a mac, and should probably work on a linux machine too, but I didn't test it on one. 
 
 ## Ingredients
+
 - password-less ssh access to whovian
 - anaconda installed on whovian and local machine (with R-packages on whovian)
 - remote_ikernel on local machine
@@ -137,90 +138,3 @@ remote_ikernel manage --add \
 ```
 
 If you open a new `jupyter-notebook` session, you should now see "SSH whovian R" in the drop-down menu for types of notebooks.
-
-## Julia
-
-This takes a bit more effort, since I don't know how to install a Julia binary on whovian, so we need to compile from source.
-
-### On whovian
-
-First we need to install Julia on whovian.  Unfortunately the Julia installer depends on cmake, which isn't installed on whovian.
-
-#### Install cmake
-
-The easiest way to install CMake is from source.
-Head over to the [CMake downloads page](http://www.cmake.org/download/) and get the latest “Unix/Linux Source” *.tar.gz file.
-You can download it form the terminal on whovian with
-
-```
-curl -O "https://cmake.org/files/v3.6/cmake-3.6.0.tar.gz"
-```
-where you might have to change the verison numbers.
-
-Now compile and install with the following commands.
-Make sure to set the `--prefix` flag correctly, otherwise you won’t have permissions to install files at the default location.
-
-```
-tar -xf cmake*.tar.gz
-
-cd cmake*
-
-./configure --prefix=$HOME
-
-make
-
-make install
-```
-
-You should now have the most up-to-date installation of cmake in `~/bin`.
-Check the version by typing:
-
-```
-cmake --version
-```
-
-If this fails because `~/bin` isn't in your path, you can add it by appending `export PATH="$PATH:${HOME}/bin"` to your `~/.bashrc` file and logging out and logging back in.
-
-#### Install Julia
-
-From you home directory on whovian:
-
-```
-git clone https://github.com/JuliaLang/julia.git
-```
-then `cd julia`, switch to the stable branch with `git checkout release-0.4`, and enter `make`.
-It will take a while to compile everything from source.
-
-To add the julia binary to your path, add a symbolic link to the julia binary to your `~/bin` directory with 
-
-```
-ln -s ~/julia/usr/bin/julia ~/bin/julia
-```
-
-you should now be able to start up the julia REPL by entering `julia` in the terminal.
-
-##### Add IJulia kernel
-
-Start julia, and enter
-
-```
-Pkg.add("IJulia")
-```
-
-It might take a little while to downlaod the package.
-
-### On your local machine
-
-To add a remote Julia kernel, in the terminal on your local machine, enter:
-
-
-```
-remote_ikernel manage --add \
-   --name="Julia" \
-   --kernel_cmd="/users/rdonovan/bin/julia -i /users/rdonovan/.julia/v0.4/IJulia/src/kernel.jl {connection_file}" \
-   --interface=ssh \
-   --host=whovian \
-   --language=julia
-```
-   
-If you open a new `jupyter-notebook` session, you should now see "SSH whovian Julia" in the drop-down menu for types of notebooks.
