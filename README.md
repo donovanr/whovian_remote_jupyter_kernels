@@ -1,4 +1,4 @@
-# Remote Jupyter Notebook Kernels for Python and R
+# Remote Notebook Kernels for Python and R
 
 This works on a mac, and should probably work on a linux machine too, but I didn't test it on one. 
 
@@ -29,34 +29,34 @@ Lastly, on the local machine append to or create `~/.ssh/config` so that it cont
 ```
 Host whovian
     HostName whovian.systemsbiology.net
-    User <your_username>
+    User <your_whovian_username>
 ```
+where you should change <your_whovian_username> to your actual username on whovian.
 
-In a new terminal, you should now be able to enter `ssh whovian` and connect without being prompted for a password.
+In a new terminal on your local machine, you should now be able to enter `ssh whovian` and connect without being prompted for a password.
 
-## Install anaconda
+## Install Anaconda
 
-We need to install [anaconda](https://www.continuum.io/downloads) python on both the local machine and your home directory on whovian, for slgightly differnet readsons.
+We need to install [Anaconda](https://www.continuum.io/downloads) Python on both the local machine and your home directory on whovian, for slightly different reasons.
 On the local machine, we need it for the Jupyter Notebook infrastructure, and on whovian, we need it for the IRkernel package.
-It shouldn't matter if you use the Python 2.7 or Python 3.5 suite, though I've only tested with 2.7.
+It shouldn't matter if you use the Python 2.7 or Python 3.5 versions of Anaconda, though I've only tested with 2.7.
 
 ### On your local machine
 
 From [this link](https://www.continuum.io/downloads#_macosx), grab the command line installer and run it with
 
 ```
-bash Anaconda_someversion_OSX-x86_64.sh
+bash Anaconda2-4.1.0-MacOSX-x86_64.sh
 ```
-for whatever the downloaded script is named.
+where you might need to change the verison numbers if they've been updated.
 
-Let anaconda add prepend itself to you path, so the that the
-anaconda versions of Python or R are the default ones.
-
+Let anaconda add prepend itself to you path, so the that the Anaconda versions of Python or R are the default ones.
 Open a new terminal, and
 
 ```
 which python
 ```
+
 should be something like `/Users/<your_username>/anaconda/bin/python`.
 
 #### Test notebook
@@ -72,19 +72,18 @@ In the upper right hand corner should be a drop-down menu that says "New", and t
 
 ### On whovian
 
-On the local machine, you just need anaconda for the `jupyter-noteboook` infrastructure, but on whovian, you need to also install R and related packages via anaconda.
+On the local machine, you just need anaconda for the `jupyter-noteboook` infrastructure, but on whovian, you need to also install R via Anaconda.
 
 From [this link](https://www.continuum.io/downloads#_unix) get the command line installer for linux and run it with
 
 ```
-bash Anaconda_someversion_Linux-x86_64.sh
+bash Anaconda2-4.1.0-Linux-x86_64.sh
 ```
-for whatever the downloaded script is named.
+where you might need to change the verison numbers if they've been updated.
 
-Let anaconda add prepend itself to you path, so the that the
-anaconda versions of Python or R are the default ones.
+Let Anaconda add prepend itself to your path, so the that the Anaconda versions of Python or R are the default ones.
 
-We also need to isntall R using anaconda's package manager:
+We also need to install R using Anaconda's package manager:
 
 ```
 conda install -c r r-essentials
@@ -95,13 +94,15 @@ In a new terminal, connect to whovian and
 ```
 which R
 ```
+
 should be something like `~/anaconda/bin/R`.
 
-Note that this is a different R than RStudio or the system R, so you’ll have to install all the packages you like to use in this R that you'll be connecting to on whovian
+Note that this is a different R than RStudio or the system R, so you’ll probably have to install all the packages you like to use in this R.
 
 ## Configure the remote kernel
 
 This only needs to happen on your local machine.
+
 Install the remote kernel manager with:
 
 ```
