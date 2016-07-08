@@ -14,24 +14,42 @@ This works on a mac, and should probably work on a linux machine too, but I didn
 We need to set up password-less ssh from your local machine to whovian.
 If you can already enter `ssh whovian` and connect without being prompted for a password, you can skip this section.
 
-In the `~/.ssh` directory on your local machine, find `id_rsa.pub` and paste its contents into your `~/.ssh/authorized_keys` file on whovian.
+
+Basiaclly what we need to do is pste the contents of `~/.ssh/id_rsa.pub` from your local machine into the  `~/.ssh/authorized_keys` file on whovian.
+If you don't have those files, here's how to generate them.
+
+### On your local machine
 
 If `.ssh` doesn’t exist on your local machine or on whovian, create it with `mkdir ~/.ssh`.
 If `~/.ssh/id_rsa` and `~/.ssh/id_rsa.pub` don’t exist on your local machine, create a key pair with `ssh-keygen -t rsa -b 4096`, and just hit enter when asked for a password.
 
-Make sure that the permissions of the `.ssh` dir on both whovian and the local machine are set correctly.
+Make sure that the permissions of the `.ssh` directory are set correctly, or ssh will complain and not function properly.
 You probably want the `.ssh` directory permissions to be `700`,
 the public key `id_rsa.pub` to be `644`, and your private key `id_rsa` to be `600`.
 You can set all of these with `chmod`, e.g. `chmod 644 id_rsa.pub`.
 
-Lastly, on the local machine append to or create `~/.ssh/config` so that it contains
+Lastly, append to or create the file `~/.ssh/config` so that it contains
 
 ```
 Host whovian
     HostName whovian.systemsbiology.net
     User <your_whovian_username>
 ```
-where you should change <your_whovian_username> to your actual username on whovian.
+
+where you should change `<your_whovian_username>` to your actual username on whovian.
+
+### On whovian
+
+If the `~/.ssh/authorized_keys` file doesn't exist, create it.
+Set its permissions to `600` with
+
+```
+chmod 600 ~/.ssh/authorized_keys
+```
+
+Now paste the contents of `~/.ssh/id_rsa.pub` on your local macine into `~/.ssh/authorized_keys` on whovian.
+
+### Test in out
 
 In a new terminal on your local machine, you should now be able to enter `ssh whovian` and connect without being prompted for a password.
 
@@ -50,14 +68,23 @@ bash Anaconda2-4.1.0-MacOSX-x86_64.sh
 ```
 where you might need to change the verison numbers if they've been updated.
 
-Let anaconda add prepend itself to you path, so the that the Anaconda versions of Python or R are the default ones.
-Open a new terminal, and
+Let Anaconda add prepend itself to you path, so the that the Anaconda versions of Python is the default one.  You can also manually do this by adding
+
+```
+export PATH="${HOME}/anaconda2/bin:$PATH"
+```
+
+to your `~/.bashrc` file.
+You might have to change `anaconda2` to `anaconda3` or just `anaconda` depending on how things got installed.
+
+Open a new terminal, and 
 
 ```
 which python
 ```
 
 should be something like `/Users/<your_username>/anaconda/bin/python`.
+
 
 #### Test notebook
 
@@ -67,7 +94,7 @@ On your local machine, entering
 jupyter-notebook
 ```
 
-in ther terminal should open a web page where you can start new notebook.
+in the terminal should open a web page where you can start new notebook.
 In the upper right hand corner should be a drop-down menu that says "New", and the only option for a notebook should be Python.
 
 ### On whovian
@@ -81,7 +108,9 @@ bash Anaconda2-4.1.0-Linux-x86_64.sh
 ```
 where you might need to change the verison numbers if they've been updated.
 
-Let Anaconda add prepend itself to your path, so the that the Anaconda versions of Python or R are the default ones.
+Let Anaconda add prepend itself to your path in `~/.bashrc` (_not_ `~/.bash_profile`, or the remote kernel won't work), so the that the Anaconda versions of Python or R are the default ones.  You can also manually do as in the previous section.
+
+#### Install R
 
 We also need to install R using Anaconda's package manager:
 
@@ -139,3 +168,56 @@ remote_ikernel manage --add \
 ```
 
 If you open a new `jupyter-notebook` session, you should now see "SSH whovian R" in the drop-down menu for types of notebooks.
+
+## Test things out
+
+From your local machine you should be able to open a new jupyter notebook of whatever type you like.
+
+### Python
+
+In a remote Python notebook, entering
+
+```
+ls
+```
+
+should produce a list of files in your home directory on whovian.
+
+Entering
+
+```python
+%matplotlib inline
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+mu, sigma = 0, 0.1 # mean and standard deviation
+s = np.random.normal(mu, sigma, 1000)
+
+count, bins, ignored = plt.hist(s, 30, normed=True)
+plt.plot(bins, 1/(sigma * np.sqrt(2 * np.pi)) * np.exp( - (bins - mu)**2 / (2 * sigma**2) ), linewidth=2, color='r')
+plt.show()
+```
+
+should produce a plot of a random sample from a normal distribution.
+
+
+### R
+
+In a remote R notebook, entering 
+
+```r
+list.files()
+```
+
+should produce a list of files in your home directory on whovian.
+
+Entering
+
+```r
+library(ggplot2)
+p <- ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length))
+p + geom_point(aes(colour = Species))
+```
+
+should produce an inline plot of the iris data.
