@@ -1,6 +1,7 @@
 # Remote Notebook Kernels for Python and R
 
-This works on a mac, and should probably work on a linux machine too, but I didn't test it on one. 
+This works on a mac, and should probably work on a linux machine too, but I didn't test it on one.
+It should also work on servers other than whovian with trivial changes.
 
 ## Ingredients
 
@@ -38,6 +39,7 @@ Host whovian
 
 where you should change `<your_whovian_username>` to your actual username on whovian.
 
+
 ### On whovian
 
 If the `~/.ssh/authorized_keys` file doesn't exist, create it.
@@ -49,9 +51,11 @@ chmod 600 ~/.ssh/authorized_keys
 
 Now paste the contents of `~/.ssh/id_rsa.pub` on your local macine into `~/.ssh/authorized_keys` on whovian.
 
-### Test in out
+
+### Test it out
 
 In a new terminal on your local machine, you should now be able to enter `ssh whovian` and connect without being prompted for a password.
+
 
 ## Install Anaconda
 
@@ -97,6 +101,7 @@ jupyter-notebook
 in the terminal should open a web page where you can start new notebook.
 In the upper right hand corner should be a drop-down menu that says "New", and the only option for a notebook should be Python.
 
+
 ### On whovian
 
 On the local machine, you just need anaconda for the `jupyter-noteboook` infrastructure, but on whovian, you need to also install R via Anaconda.
@@ -110,6 +115,7 @@ where you might need to change the verison numbers if they've been updated.
 
 Let Anaconda add prepend itself to your path in `~/.bashrc` (_not_ `~/.bash_profile`, or the remote kernel won't work), so the that the Anaconda versions of Python or R are the default ones.  You can also manually do as in the previous section.
 
+
 #### Install R
 
 We also need to install R using Anaconda's package manager:
@@ -117,6 +123,9 @@ We also need to install R using Anaconda's package manager:
 ```
 conda install -c r r-essentials
 ```
+
+
+#### Test it out
 
 In a new terminal, connect to whovian and
 
@@ -127,6 +136,7 @@ which R
 should be something like `~/anaconda/bin/R`.
 
 Note that this is a different R than RStudio or the system R, so you’ll probably have to install all the packages you like to use in this R.
+
 
 ## Configure the remote kernel
 
@@ -169,9 +179,9 @@ remote_ikernel manage --add \
 
 If you open a new `jupyter-notebook` session, you should now see "SSH whovian R" in the drop-down menu for types of notebooks.
 
-## Test things out
+## Test out remote notebooks
 
-From your local machine you should be able to open a new jupyter notebook of whatever type you like.
+From your local machine you should be able to open a new remote jupyter notebook of whatever type you like form the drop-down menu.
 
 ### Python
 
@@ -182,7 +192,6 @@ ls
 ```
 
 should produce a list of files in your home directory on whovian.
-
 Entering
 
 ```python
@@ -191,7 +200,7 @@ Entering
 import numpy as np
 import matplotlib.pyplot as plt
 
-mu, sigma = 0, 0.1 # mean and standard deviation
+mu, sigma = 0, 0.1
 s = np.random.normal(mu, sigma, 1000)
 
 count, bins, ignored = plt.hist(s, 30, normed=True)
@@ -211,7 +220,6 @@ list.files()
 ```
 
 should produce a list of files in your home directory on whovian.
-
 Entering
 
 ```r
