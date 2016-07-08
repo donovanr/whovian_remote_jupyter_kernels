@@ -22,7 +22,7 @@ If `~/.ssh/id_rsa` and `~/.ssh/id_rsa.pub` don’t exist on your local machine, 
 Make sure that the permissions of the `.ssh` dir on both whovian and the local machine are set correctly.
 You probably want the `.ssh` directory permissions to be `700`,
 the public key `id_rsa.pub` to be `644`, and your private key `id_rsa` to be `600`.
-You can set all of these with `chmod`, e.g. `chmod id_rsa.pub 644`.
+You can set all of these with `chmod`, e.g. `chmod 644 id_rsa.pub`.
 
 Lastly, on the local machine append to or create `~/.ssh/config` so that it contains
 
